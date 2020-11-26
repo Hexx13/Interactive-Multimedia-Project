@@ -5,7 +5,9 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public int enemyRange = 50;
-    public int fromCenterRange = 30;
+    public int fromCenterRange = 10;
+    public int distanceFromEnemy = 10;
+    public int maxEnemy = 20;
 
     
     public List<GameObject> enemyInstances;
@@ -20,28 +22,21 @@ public class SpawnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        setNametoIndex();
         InvokeRepeating("spawnRandomEnemy", 2, 1.5f);
     }
 
 
     void spawnRandomEnemy()
     {
-        if(enemyInstances.Count <= 10)
+        if(enemyInstances.Count <= maxEnemy-1)
         {
             Vector3 coords = generateEnemyCoords();
             instantiateEnemy(coords);
         }
     }
 
-    private float distance(float x1, float y1, float x2, float y2) 
-    {
-        float distx, disty;
-        distx = Mathf.Pow(x2 - x1, 2);
-        disty = Mathf.Pow(y2 - y1, 2);
-        int result = (int)(Mathf.Sqrt(distx + disty));
-
-        return result;
-    }//Method to calculate distance between 2 points using coordinate distance formula
+   
 
     private void instantiateEnemy(Vector3 coords) 
     {
@@ -50,11 +45,12 @@ public class SpawnManager : MonoBehaviour
 
         // creates new instance of a random enemy prefab
         enemyInstances.Insert(enemyInstances.Count, Instantiate(enemyPrefabs[enemyIndex], coords, enemyPrefabs[enemyIndex].transform.rotation));
+        instantiateMass(enemyInstances[enemyInstances.Count-1]);
     }
 
     private Vector3 generateCoords()
     {
-        return new Vector3(Random.Range(-enemyRange, enemyRange), 0, Random.Range(-enemyRange, enemyRange));
+        return new Vector3(Random.Range(-enemyRange, enemyRange), 1.5f, Random.Range(-enemyRange, enemyRange));
     }//creating new set of random coordinates
 
     private bool isTooCloseToCenter(Vector3 coords)
@@ -72,7 +68,7 @@ public class SpawnManager : MonoBehaviour
     {
         for (int i = 0; i < enemyInstances.Count;)
         {
-            if (distance(coords.x, coords.y, enemyInstances[i].transform.position.x, enemyInstances[i].transform.position.y) < 5)
+            if (distance(coords.x, coords.y, enemyInstances[i].transform.position.x, enemyInstances[i].transform.position.y) < distanceFromEnemy)
             {
                 return true;
             }
@@ -80,20 +76,33 @@ public class SpawnManager : MonoBehaviour
         return false;
     } // method to check if enemy is too close to another enemy
 
-    private bool isCoordGood(Vector3 coords) 
-    {
-        if (isTooCloseToCenter(coords) == false)
-        {
-            if (isFirstEnemy() == true) return true;
-           
-            else if (isTooCloseToEnemy(coords) == false) return true;
 
+
+     private float distance(float x1, float y1, float x2, float y2) 
+        {
+            float distx, disty;
+            distx = Mathf.Pow(x2 - x1, 2);
+            disty = Mathf.Pow(y2 - y1, 2);
+            int result = (int)(Mathf.Sqrt(distx + disty));
+
+            return result;
+        }//Method to calculate distance between 2 points using coordinate distance formula
+
+
+    private bool isCoordGood(Vector3 coords) 
+        {
+            if (isTooCloseToCenter(coords) == false)
+            {
+                if (isFirstEnemy() == true) return true;
+           
+                else if (isTooCloseToEnemy(coords) == false) return true;
+
+                else return false;
+            }
             else return false;
-        }
-        else return false;
 
         
-    }//checks if given coordinates are good for spawning an enemy
+        }//checks if given coordinates are good for spawning an enemy
 
     private Vector3 generateEnemyCoords() 
     {
@@ -107,5 +116,27 @@ public class SpawnManager : MonoBehaviour
         }
         return Vector3.zero;
     }//returns coordinates for enemy spawn
+
+    private void setNametoIndex()
+    {
+        for(int i = 0; i < enemyInstances.Count; i++)
+        {
+            enemyInstances[i].name = i.ToString();
+        }
+    }
+
+    public void delete(GameObject obj)
+    {
+        int objectIndex = obj.GetComponent<DestroyOutOfBounds>().getIndex();
+        enemyInstances.RemoveAt(objectIndex);
+        Destroy(obj); 
+    }
+
+    private void instantiateMass(GameObject obj)
+    {
+        float playerMass = GameObject.Find("Player").GetComponent<Mass>().getMass();
+        obj.GetComponent<Mass>().setMass(Random.Range(playerMass/2, playerMass*2));
+    }
+    //sets the mass of enemy object when spawned
 
 }

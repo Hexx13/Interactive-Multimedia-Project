@@ -5,7 +5,7 @@ using UnityEngine;
 public class Mass : MonoBehaviour
 {
 
-    public int objectMass = 1;
+    public float objectMass = 1;
     private Vector3 size;
 
     // Start is called before the first frame update
@@ -22,12 +22,12 @@ public class Mass : MonoBehaviour
     }
 
 
-    public void setMass(int mass)
+    public void setMass(float mass)
     {
         this.objectMass = mass;
     }
 
-    public int getMass()
+    public float getMass()
     {
         return this.objectMass;
     }
