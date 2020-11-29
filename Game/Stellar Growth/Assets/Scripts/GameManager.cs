@@ -11,22 +11,31 @@ public class GameManager : MonoBehaviour
     public int distanceFromEnemy = 10;
     public int maxEnemy = 20;
     private int massScore;
-    public TextMeshProUGUI scoreText;
-    
+    public bool gameOver;
+    public TextMeshProUGUI scoreText, gameOverText;    
+    public Button restartButton;
     public List<GameObject> enemyInstances;
     public GameObject[] enemyPrefabs;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameOver = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         updateMassScore();
-        InvokeRepeating("spawnRandomEnemy", 2, 1.5f);
+        if(gameOver == false)
+        {
+            InvokeRepeating("spawnRandomEnemy", 2, 1.5f);
+        }
+        else if(gameOver)
+        {
+            gameOverText.gameObject.SetActive(true);
+            restartButton.gameObject.SetActive(true);
+        }
     }
 
 
@@ -59,18 +68,15 @@ public class GameManager : MonoBehaviour
     {
         return new Vector3(Random.Range(-enemyRange, enemyRange), 0, Random.Range(-enemyRange, enemyRange));
     }//creating new set of random coordinates
-
     private bool isTooCloseToCenter(Vector3 coords)
     {
         if (coords.x > fromCenterRange || coords.z > fromCenterRange || coords.x < -fromCenterRange || coords.z < -fromCenterRange) return false;
         else return true;
     } // method to check if enemy spawn coordinates are too close to the player
-
     private bool isFirstEnemy (){ 
         if (enemyInstances.Count > 0) return false;
         else return true;
     } // method to check if its first enemy spawn
-
     private bool isTooCloseToEnemy(Vector3 coords) 
     {
         for (int i = 0; i < enemyInstances.Count;i++)
@@ -113,19 +119,28 @@ public class GameManager : MonoBehaviour
     private void instantiateMass(GameObject obj)
     {
         float playerMass = GameObject.Find("Player").GetComponent<Mass>().getMass();
-        obj.GetComponent<Mass>().setMass(Random.Range(playerMass/2, playerMass*2));
+        
+        if(obj.CompareTag("Asteroid")){
+            obj.GetComponent<Mass>().setMass(Random.Range(0.3f, 4));
+        }
+        else if(obj.CompareTag("Planet")){
+            obj.GetComponent<Mass>().setMass(Random.Range(10, 20));
+        }
     }
     //sets the mass of enemy object when spawned
 
-
+    
 
     public void updateMassScore() 
     {
-        scoreText.text = "Score: " + GameObject.Find("Player").GetComponent<Mass>().getMass();
+        scoreText.text = "Mass: " + GameObject.Find("Player").GetComponent<Mass>().getMass().ToString("0.##");
     }
 
 
-
+    public void RestartGame()
+    {
+     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
 
 }

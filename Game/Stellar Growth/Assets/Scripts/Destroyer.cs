@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Destroyer : MonoBehaviour
 {
-    public float distanceLimit = 100f;
+    private float distanceLimit = 200f;
     private PlayerController controller;
     private GameManager manager;
 
