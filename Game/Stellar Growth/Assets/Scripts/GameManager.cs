@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public int maxEnemy = 20;
     private int massScore;
     public bool gameOver;
+    public bool winGame;
     public TextMeshProUGUI scoreText, gameOverText;    
     public Button restartButton, mainMenuButton;
     public List<GameObject> enemyInstances;
@@ -21,11 +22,19 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         gameOver = false;
+        winGame = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(GameObject.Find("Player").GetComponent<Mass>().getMass() > 6)
+        {
+            gameOver = true;
+            endGameScreen();
+            gameOverText.text = "You Win!";
+        }
+
         updateMassScore();
         if(gameOver == false)
         {
@@ -33,9 +42,7 @@ public class GameManager : MonoBehaviour
         }
         else if(gameOver)
         {
-            gameOverText.gameObject.SetActive(true);
-            restartButton.gameObject.SetActive(true);
-            mainMenuButton.gameObject.SetActive(true);
+            endGameScreen();
         }
     }
 
@@ -109,14 +116,11 @@ public class GameManager : MonoBehaviour
         while (isCoordGood(coords) == false)coords = generateCoords();
         return coords;
     }//returns coordinates for enemy spawn
-
-   
     public void delete(GameObject obj)
     {
         enemyInstances.Remove(obj);
         Destroy(obj); 
     }
-
     private void instantiateMass(GameObject obj)
     {
         float playerMass = GameObject.Find("Player").GetComponent<Mass>().getMass();
@@ -129,17 +133,20 @@ public class GameManager : MonoBehaviour
         }
     }
     //sets the mass of enemy object when spawned
-
-    
-
     public void updateMassScore() 
     {
         scoreText.text = "Mass: " + GameObject.Find("Player").GetComponent<Mass>().getMass().ToString("0.##");
     }
-
-
     public void RestartGame()
     {
      SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void endGameScreen()
+    {
+            gameOverText.gameObject.SetActive(true);
+            restartButton.gameObject.SetActive(true);
+            mainMenuButton.gameObject.SetActive(true);
+    }
+
 }
