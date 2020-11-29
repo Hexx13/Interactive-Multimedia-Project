@@ -149,8 +149,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55702692620c7f041848600a954f08a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyRange: 50
-  fromCenterRange: 20
-  enemyInstances: []
-  enemyPrefabs: []
   distanceLimit: 100

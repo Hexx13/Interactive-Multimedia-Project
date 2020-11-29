@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    //private PlayerController playerControllerScript;
+   
 
     private float speed = 5;
 
     // Start is called before the first frame update
     void Start()
     {
-        //playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        
     }
 
     // Update is called once per frame

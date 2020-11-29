@@ -7,14 +7,14 @@ public class PlayerController : MonoBehaviour
     
     public bool gameOver = false;
     private Mass playerMass;
-    private SpawnManager manager;
+    private GameManager manager;
     public int growthFactor = 5;
 
     // Start is called before the first frame update
     void Start()
     {
         playerMass = GameObject.Find("Player").GetComponent<Mass>();
-        manager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+        manager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
