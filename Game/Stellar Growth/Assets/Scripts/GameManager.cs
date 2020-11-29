@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     private int massScore;
     public bool gameOver;
     public TextMeshProUGUI scoreText, gameOverText;    
-    public Button restartButton;
+    public Button restartButton, mainMenuButton;
     public List<GameObject> enemyInstances;
     public GameObject[] enemyPrefabs;
 
@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
         {
             gameOverText.gameObject.SetActive(true);
             restartButton.gameObject.SetActive(true);
+            mainMenuButton.gameObject.SetActive(true);
         }
     }
 
@@ -141,6 +142,4 @@ public class GameManager : MonoBehaviour
     {
      SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
-
 }
