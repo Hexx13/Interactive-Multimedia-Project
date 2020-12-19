@@ -7,6 +7,7 @@ public class Mass : MonoBehaviour
 
     public float objectMass = 1;
     private Vector3 size;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +18,7 @@ public class Mass : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         size = new Vector3(objectMass, objectMass, objectMass);
         transform.localScale = size;
     }

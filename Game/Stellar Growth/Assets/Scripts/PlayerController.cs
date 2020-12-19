@@ -1,16 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    private int life;
+    public ParticleSystem explosionParticle;
     private Mass playerMass;
     private GameManager manager;
-    public int growthFactor = 5;
+    public AudioClip pow;
+    private AudioSource playerAudio;
+    public GameObject [] lives;
 
+    public int growthFactor = 5;
     // Start is called before the first frame update
     void Start()
     {
+        life =3;
+        playerAudio = GetComponent<AudioSource>();
         playerMass = GameObject.Find("Player").GetComponent<Mass>();
         manager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
@@ -18,34 +26,59 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
+
+
+    private void zoomOutCam()
+    {
+        Vector3 camPos = GameObject.Find("Main Camera").transform.position;
+        GameObject.Find("Main Camera").transform.position = new Vector3(0, camPos.y + 2, camPos.z - 1);
+    }
+    // zooms out camera
+    private void doBigPow()
+    {
+        playerAudio.PlayOneShot(pow, 1);
+        Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+    }
+    // method for explosion and particle effect on crashing into another body
+
+
+    private void hideHearts(){
+        lives[life].SetActive(false);
+    }
+    // hides hearts to match the amount of lives
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.GetComponent<Mass>().getMass() < playerMass.getMass()*1.3f)
-        {
-             if (collision.gameObject.CompareTag("Asteroid"))
-            {
-                playerMass.setMass(playerMass.getMass() + (collision.gameObject.GetComponent<Mass>().getMass()/growthFactor));
-                manager.delete(collision.gameObject);
-                Vector3 camPos = GameObject.Find("Main Camera").transform.position;
-                GameObject.Find("Main Camera").transform.position = new Vector3 (0, camPos.y+2, camPos.z - 1);
-                
-            }
 
-            else if (collision.gameObject.CompareTag("Planet"))
+        if (collision.gameObject.CompareTag("Food"))
+        {
+            if (collision.gameObject.GetComponent<Mass>().getMass() < playerMass.getMass() * 1.3f)
             {
-                playerMass.setMass(playerMass.getMass() + (collision.gameObject.GetComponent<Mass>().getMass()/growthFactor));
+                doBigPow();
+                playerMass.setMass(playerMass.getMass() + (collision.gameObject.GetComponent<Mass>().getMass() / growthFactor));
                 manager.delete(collision.gameObject);
-                Vector3 camPos = GameObject.Find("Main Camera").transform.position;
-                GameObject.Find("Main Camera").transform.position = new Vector3 (0, camPos.y+2, camPos.z - 1);
+                zoomOutCam();
+            }// if the object is small enough to be eaten, grow mass of player 
+
+            else if (life > 0){
+                life--;
+                hideHearts();
+                doBigPow();
+                manager.delete(collision.gameObject);
+            }// if lifes are more than 0 delete enemy and continue
+
+            else if(life <= 0){
+                doBigPow();
+                GameObject.Find("GameManager").GetComponent<GameManager>().gameOver = true;
             }
         }
-        else
+
+        else if (collision.gameObject.CompareTag("Killer"))
         {
-            GameObject.Find("GameManager").GetComponent<GameManager>().gameOver =true;
+            doBigPow();
+            GameObject.Find("GameManager").GetComponent<GameManager>().gameOver = true;
         }
-       
     }
 }

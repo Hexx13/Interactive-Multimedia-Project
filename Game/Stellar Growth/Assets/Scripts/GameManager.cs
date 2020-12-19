@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private int massScore;
     public bool gameOver;
     public bool winGame;
+    
     public TextMeshProUGUI scoreText, gameOverText;    
     public Button restartButton, mainMenuButton;
     public List<GameObject> enemyInstances;
@@ -125,10 +126,10 @@ public class GameManager : MonoBehaviour
     {
         float playerMass = GameObject.Find("Player").GetComponent<Mass>().getMass();
         
-        if(obj.CompareTag("Asteroid")){
+        if(obj.CompareTag("Food")){
             obj.GetComponent<Mass>().setMass(Random.Range(0.3f, 4));
         }
-        else if(obj.CompareTag("Planet")){
+        else if(obj.CompareTag("Killer")){
             obj.GetComponent<Mass>().setMass(Random.Range(10, 20));
         }
     }

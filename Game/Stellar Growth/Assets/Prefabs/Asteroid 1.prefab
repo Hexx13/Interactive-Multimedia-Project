@@ -17,8 +17,8 @@ GameObject:
   - component: {fileID: 7524438187840419631}
   - component: {fileID: 2100718396}
   m_Layer: 0
-  m_Name: Asteroid
-  m_TagString: Asteroid
+  m_Name: Asteroid 1
+  m_TagString: Food
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1ca6457bf751df64e80186162998a90d, type: 2}
+  - {fileID: 2100000, guid: 0e34efc646fa94d4a8a4524c5efb412a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
