@@ -7,21 +7,25 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public int enemyRange = 50;
-    public int fromCenterRange = 10;
+    private float fromCenterRange;
     public int distanceFromEnemy = 10;
     public int maxEnemy = 20;
     private int massScore;
     public bool gameOver;
     public bool winGame;
+    public int winAmount;
     
+
+    GameObject player;
     public TextMeshProUGUI scoreText, gameOverText;    
-    public Button restartButton, mainMenuButton;
+    public Button restartButton, mainMenuButton, nextlvltbutton;
     public List<GameObject> enemyInstances;
     public GameObject[] enemyPrefabs;
 
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.Find("Player");
         gameOver = false;
         winGame = false;
     }
@@ -29,8 +33,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(GameObject.Find("Player").GetComponent<Mass>().getMass() > 6)
-        {
+
+        fromCenterRange = player.GetComponent<Mass>().getMass() * 20.0f;
+
+        if(GameObject.Find("Player").GetComponent<Mass>().getMass() > winAmount)
+        {   winGame=true;
             gameOver = true;
             endGameScreen();
             gameOverText.text = "You Win!";
@@ -52,16 +59,11 @@ public class GameManager : MonoBehaviour
     {
         if(enemyInstances.Count < maxEnemy)
         {
-            
             Vector3 coords = generateEnemyCoords();
             instantiateEnemy(coords);
-            
-            
         }
     }
-
-   
-
+    // final method for spawning enemies checks if max enemies have spawned and sets spawn coordinates
     private void instantiateEnemy(Vector3 coords) 
     {
         //this generates a random number from the enemyPrefabs array for spawning random 
@@ -72,20 +74,23 @@ public class GameManager : MonoBehaviour
         instantiateMass(enemyInstances[enemyInstances.Count-1]);
         
     }
-
+    //method that decides which enemy prefab is used, instantiates enemy and adds it to the list, and sets the random mass
     private Vector3 generateCoords()
     {
         return new Vector3(Random.Range(-enemyRange, enemyRange), 0, Random.Range(-enemyRange, enemyRange));
-    }//creating new set of random coordinates
+    }
+    //creating new set of random coordinates
     private bool isTooCloseToCenter(Vector3 coords)
     {
         if (coords.x > fromCenterRange || coords.z > fromCenterRange || coords.x < -fromCenterRange || coords.z < -fromCenterRange) return false;
         else return true;
-    } // method to check if enemy spawn coordinates are too close to the player
+    } 
+    // method to check if enemy spawn coordinates are too close to the player
     private bool isFirstEnemy (){ 
         if (enemyInstances.Count > 0) return false;
         else return true;
-    } // method to check if its first enemy spawn
+    } 
+    // method to check if its first enemy spawn
     private bool isTooCloseToEnemy(Vector3 coords) 
     {
         for (int i = 0; i < enemyInstances.Count;i++)
@@ -94,8 +99,8 @@ public class GameManager : MonoBehaviour
                 return true;  
         }
         return false;
-    } // method to check if enemy is too close to another enemy
-
+    } 
+    // method to check if enemy is too close to another enemy
     private bool isCoordGood(Vector3 coords) 
         {
             if (isTooCloseToCenter(coords) == false)
@@ -109,19 +114,21 @@ public class GameManager : MonoBehaviour
             else return false;
 
         
-        }//checks if given coordinates are good for spawning an enemy
-
+        }
+    //checks if given coordinates are good for spawning an enemy
     private Vector3 generateEnemyCoords() 
     {
         Vector3 coords = generateCoords();
         while (isCoordGood(coords) == false)coords = generateCoords();
         return coords;
-    }//returns coordinates for enemy spawn
+    }
+    //returns coordinates for enemy spawn
     public void delete(GameObject obj)
     {
         enemyInstances.Remove(obj);
         Destroy(obj); 
     }
+    //method for simply deleting an enemy object and removing it from its array list
     private void instantiateMass(GameObject obj)
     {
         float playerMass = GameObject.Find("Player").GetComponent<Mass>().getMass();
@@ -138,16 +145,26 @@ public class GameManager : MonoBehaviour
     {
         scoreText.text = "Mass: " + GameObject.Find("Player").GetComponent<Mass>().getMass().ToString("0.##");
     }
+    //updates the ui that displays mass
     public void RestartGame()
     {
      SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+    //reloads the scene to restart game
+
+    public void goLvl2()
+    {
+     SceneManager.LoadScene("Stage 2");
+    }
+    //changes scene to stage2
 
     public void endGameScreen()
-    {
+    {       
+            if(winGame == true){nextlvltbutton.gameObject.SetActive(true);}
+            
             gameOverText.gameObject.SetActive(true);
             restartButton.gameObject.SetActive(true);
             mainMenuButton.gameObject.SetActive(true);
     }
-
+    //shows end game screen
 }

@@ -21,15 +21,30 @@ public class SceneSwitch : MonoBehaviour
         
     }
 
-    public void goLevel1()
+
+    public void openRepository(){
+        Application.OpenURL("https://www.google.com");
+    }
+    public void goLevel3(){
+        SceneManager.LoadScene("Stage 3");
+    }
+    //sends you to level 2
+
+    public void goLevel2(){
+        SceneManager.LoadScene("Stage 2");
+    }
+    //sends you to level 2
+
+        public void goLevel1()
     {
         
         SceneManager.LoadScene("Stage 1");
     }
-
+    //sends you to level 1
     public void goMainMenu()
     {
         
         SceneManager.LoadScene("Main Menu");
     }
+    //sends you to main menu
 }

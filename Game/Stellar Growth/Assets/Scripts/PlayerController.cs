@@ -12,12 +12,13 @@ public class PlayerController : MonoBehaviour
     public AudioClip pow;
     private AudioSource playerAudio;
     public GameObject [] lives;
-
+    // array that stores the life image sprites
     public int growthFactor = 5;
     // Start is called before the first frame update
     void Start()
     {
-        life =3;
+        life =3; // sets the starting lives
+
         playerAudio = GetComponent<AudioSource>();
         playerMass = GameObject.Find("Player").GetComponent<Mass>();
         manager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -35,15 +36,13 @@ public class PlayerController : MonoBehaviour
         Vector3 camPos = GameObject.Find("Main Camera").transform.position;
         GameObject.Find("Main Camera").transform.position = new Vector3(0, camPos.y + 2, camPos.z - 1);
     }
-    // zooms out camera
+    // zooms out camera when called
     private void doBigPow()
     {
         playerAudio.PlayOneShot(pow, 1);
         Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
     }
     // method for explosion and particle effect on crashing into another body
-
-
     private void hideHearts(){
         lives[life].SetActive(false);
     }
@@ -73,6 +72,7 @@ public class PlayerController : MonoBehaviour
                 doBigPow();
                 GameObject.Find("GameManager").GetComponent<GameManager>().gameOver = true;
             }
+            //ends game if you run out of lives
         }
 
         else if (collision.gameObject.CompareTag("Killer"))
@@ -80,5 +80,6 @@ public class PlayerController : MonoBehaviour
             doBigPow();
             GameObject.Find("GameManager").GetComponent<GameManager>().gameOver = true;
         }
+        //ends game if you collide with a killer object
     }
 }

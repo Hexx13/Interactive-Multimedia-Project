@@ -18,8 +18,9 @@ public class Mass : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //vector for setting the size
         size = new Vector3(objectMass, objectMass, objectMass);
+        //setting the size of the object of to size
         transform.localScale = size;
     }
 
@@ -28,10 +29,10 @@ public class Mass : MonoBehaviour
     {
         this.objectMass = mass;
     }
-
+//setter method for mass
     public float getMass()
     {
         return this.objectMass;
     }
-
+// getter method for mass
 }

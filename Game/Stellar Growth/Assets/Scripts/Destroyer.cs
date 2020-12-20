@@ -5,14 +5,12 @@ using UnityEngine;
 public class Destroyer : MonoBehaviour
 {
     private float distanceLimit = 200f;
-    private PlayerController controller;
     private GameManager manager;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GameObject.Find("Player").GetComponent<PlayerController>();
         manager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
@@ -20,6 +18,7 @@ public class Destroyer : MonoBehaviour
     void Update()
     {
         deleteObject();
+        //checks every frame if object is out of bounds
     }
 
     private void deleteObject()
@@ -37,6 +36,6 @@ public class Destroyer : MonoBehaviour
         {
             manager.delete(gameObject);
         }
-    }
+    } // Method that deletes objects after they are out of bounds
 
 }
