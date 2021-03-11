@@ -23,7 +23,7 @@ public class SceneSwitch : MonoBehaviour
 
 
     public void openRepository(){
-        Application.OpenURL("https://www.google.com");
+        Application.OpenURL("https://github.com/Hexx13/Interactive-Multimedia-Project");
     }
     public void goLevel3(){
         SceneManager.LoadScene("Stage 3");
